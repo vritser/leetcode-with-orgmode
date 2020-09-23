@@ -1,0 +1,158 @@
+-*-  mode: org; mode: visual-line -*-
+
+* Basic
+** [[https://leetcode.com/problems/two-sum/][1. Two Sum]]
+
+Given an array of integers ~nums~ and an integer ~target~, return /indices of the two numbers such that they add up to target/.
+
+You may assume that each input would have *exactly one solution*, and you may not use the /same/ element twice.
+
+You can return the answer in any order.
+
+*Example 1:*
+#+begin_src haskell
+Input: nums = [2,7,11,15], target = 9
+Output: [0,1]
+Output: Because nums[0] + nums[1] == 9, we return [0, 1].
+#+end_src
+
+*Example 2:*
+#+begin_src haskell
+Input: nums = [3,2,4], target = 6
+Output: [1,2]
+#+end_src
+
+*Example 3:*
+#+begin_src haskell
+Input: nums = [3,3], target = 6
+Output: [0,1]
+#+end_src
+
+*Constraints:*
+
+  - ~2 <= nums.length <= 105~
+  - ~-109 <= nums[i] <= 109~
+  - ~-109 <= target <= 109~
+  - *Only one valid answer exists.*
+
+#+begin_src python :output result
+from typing import List
+
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        m = {}
+
+        for i, n in enumerate(nums, start = 0):
+            diff = target - n
+            if diff in m:
+                return [m[diff], i]
+            m[n] = i
+
+        return []
+#+end_src
+
+** [[https://leetcode.com/problems/add-two-numbers/][2. Add Two Numbers]]
+
+You are given two *non-empty* linked lists representing two non-negative integers. The digits are stored in *reverse order* and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.
+
+You may assume the two numbers do not contain any leading zero, except the number 0 itself.
+
+*Example:*
+#+begin_src haskell
+Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+Output: 7 -> 0 -> 8
+Explanation: 342 + 465 = 807.
+#+end_src
+
+#+begin_src python
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+class Solution:
+    def addTwoNumbers(self, l1: ListNode, l2: ListNode) -> ListNode:
+        carry = 0
+        dummy = ListNode()
+        curr = dummy
+
+        while l1 != None or l2 != None:
+            a = 0 if l1 == None else l1.val
+            b = 0 if l2 == None else l2.val
+
+            sum = a + b + carry
+            carry = int(sum / 10)
+            curr.next = ListNode(sum % 10)
+            curr = curr.next
+
+            if l1 != None: l1 = l1.next
+            if l2 != None: l2 = l2.next
+
+        if carry > 0: curr.next = ListNode(carry)
+
+        return dummy.next
+#+end_src
+
+** [[https://leetcode.com/problems/valid-parentheses/][20. Valid Parentheses]]
+
+Given a string ~s~ containing just the characters ~'('~, ~')'~, ~'{'~, ~'}'~, ~'['~ and ~']'~, determine if the input string is valid.
+
+An input string is valid if:
+  1. Open brackets must be closed by the same type of brackets.
+  2. Open brackets must be closed in the correct order.
+ 
+*Example 1:*
+#+begin_src haskell
+Input: s = "()"
+Output: true
+#+end_src
+
+*Example 2:*
+#+begin_src haskell
+Input: s = "()[]{}"
+Output: true
+#+end_src
+
+*Example 3:*
+#+begin_src haskell
+Input: s = "(]"
+Output: false
+#+end_src
+
+*Example 4:*
+#+begin_src haskell
+Input: s = "([)]"
+Output: false
+#+end_src
+
+*Example 5:*
+#+begin_src haskell
+Input: s = "{[]}"
+Output: true
+#+end_src
+ 
+*Constraints:*
+
+  - ~1 <= s.length <= 104~
+  - ~s~ consists of parentheses only ~'()[]{}'~.
+
+#+begin_src python
+class Solution:
+    def isValid(self, s: str) -> bool:
+        ps = {
+            '(': ')',
+            '{' : '}',
+            '[': ']'
+        }
+        stack = []
+
+        for c in s:
+            if c in ps:
+                stack.append(c)
+            else:
+                if len(stack) == 0:
+                    return False
+                if ps[stack.pop()] != c:
+                    return False
+        return len(stack) == 0
+#+end_src
